@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -9,7 +11,8 @@ class MainMenu extends StatefulWidget {
   State<MainMenu> createState() => _MainMenuState();
 }
 
-class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin {
+class _MainMenuState extends State<MainMenu>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _fadeIn;
 
@@ -82,17 +85,56 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
                       label: 'New Game',
                       onTap: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const GameScreen()),
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const GameScreen()),
                         );
                       }),
                   MenuButton(label: 'Continue', onTap: () {}),
-                  MenuButton(label: 'Settings', onTap: () {}),
                   MenuButton(
-                      label: 'Exit',
-                      onTap: () {
-                        SystemNavigator.pop();
-                      }),
+                    label: 'Settings',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                      );
+                    },
+                  ),
+                  MenuButton(
+                    label: 'Exit',
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          backgroundColor: Colors.black87,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          title: Text(
+                            'Exit Game',
+                            style: GoogleFonts.cinzel(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          content: Text(
+                            'Are you sure you want to leave the Abyss?',
+                            style: GoogleFonts.cinzel(color: Colors.white70),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text('Cancel', style: TextStyle(color: Colors.white)),
+                            ),
+                            TextButton(
+                              onPressed: () => SystemNavigator.pop(),
+                              child: const Text('Exit Game', style: TextStyle(color: Colors.redAccent)),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -153,6 +195,85 @@ class GameScreen extends StatelessWidget {
             fontSize: 24,
             color: Colors.deepPurpleAccent,
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  bool musicOn = true;
+  bool soundOn = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      musicOn = prefs.getBool('musicOn') ?? true;
+      soundOn = prefs.getBool('soundOn') ?? true;
+    });
+  }
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Text(
+          'Settings',
+          style: GoogleFonts.cinzel(color: Colors.white),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            SwitchListTile(
+              title: Text(
+                'Music',
+                style: GoogleFonts.cinzel(color: Colors.white),
+              ),
+              value: musicOn,
+              activeColor: Colors.deepPurpleAccent,
+              onChanged: (val) async {
+                setState(() {
+                  musicOn = val;
+                });
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setBool('musicOn', musicOn);
+              },
+            ),
+            SwitchListTile(
+              title: Text(
+                'Sound FX',
+                style: GoogleFonts.cinzel(color: Colors.white),
+              ),
+              value: soundOn,
+              activeColor: Colors.deepPurpleAccent,
+              onChanged: (val) async {
+                setState(() {
+                  soundOn = val;
+                });
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setBool('soundOn', soundOn);
+              },
+            ),
+          ],
         ),
       ),
     );
