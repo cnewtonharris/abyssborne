@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'audio_manager.dart';
+
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -256,6 +258,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 });
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.setBool('musicOn', musicOn);
+
+                if (musicOn) {
+                  await AudioManager().playMusic();
+                } else {
+                  await AudioManager().stopMusic();
+                }
               },
             ),
             SwitchListTile(
