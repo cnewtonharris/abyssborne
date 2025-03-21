@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -9,8 +10,8 @@ class MainMenu extends StatefulWidget {
 }
 
 class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _fadeIn;
+  late final AnimationController _controller;
+  late final Animation<double> _fadeIn;
 
   @override
   void initState() {
@@ -19,10 +20,12 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
       duration: const Duration(seconds: 2),
       vsync: this,
     );
+
     _fadeIn = CurvedAnimation(
       parent: _controller,
       curve: Curves.easeIn,
     );
+
     _controller.forward();
   }
 
@@ -75,10 +78,21 @@ class _MainMenuState extends State<MainMenu> with SingleTickerProviderStateMixin
                     ),
                   ),
                   const SizedBox(height: 50),
-                  MenuButton(label: 'New Game', onTap: () {}),
+                  MenuButton(
+                      label: 'New Game',
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const GameScreen()),
+                        );
+                      }),
                   MenuButton(label: 'Continue', onTap: () {}),
                   MenuButton(label: 'Settings', onTap: () {}),
-                  MenuButton(label: 'Exit', onTap: () {}),
+                  MenuButton(
+                      label: 'Exit',
+                      onTap: () {
+                        SystemNavigator.pop();
+                      }),
                 ],
               ),
             ),
@@ -118,6 +132,26 @@ class MenuButton extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class GameScreen extends StatelessWidget {
+  const GameScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Text(
+          'Welcome to the Abyss...',
+          style: GoogleFonts.cinzel(
+            fontSize: 24,
+            color: Colors.deepPurpleAccent,
           ),
         ),
       ),
