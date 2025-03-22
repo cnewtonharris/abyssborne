@@ -57,6 +57,7 @@ flutter:
   assets:
     - assets/images/main_menu_bg.png
     - assets/audio/main_theme.mp3
+    - assets/audio/tap.mp3
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

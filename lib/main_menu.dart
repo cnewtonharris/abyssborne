@@ -158,7 +158,10 @@ class MenuButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: GestureDetector(
-        onTap: onTap,
+        onTap: () async {
+          await AudioManager().playSfx('tap.mp3');
+          onTap();
+        },
         child: Container(
           width: 200,
           padding: const EdgeInsets.symmetric(vertical: 14),
@@ -182,6 +185,7 @@ class MenuButton extends StatelessWidget {
     );
   }
 }
+
 
 class GameScreen extends StatelessWidget {
   const GameScreen({super.key});
@@ -214,6 +218,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool musicOn = true;
   bool soundOn = true;
   double musicVolume = 0.5; // 50% by default
+  double sfxVolume = 1.0;
+
 
 
   @override
@@ -228,6 +234,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       musicOn = prefs.getBool('musicOn') ?? true;
       soundOn = prefs.getBool('soundOn') ?? true;
       musicVolume = prefs.getDouble('musicVolume') ?? 0.5;
+      sfxVolume = prefs.getDouble('sfxVolume') ?? 1.0;
 
     });
   }
@@ -319,8 +326,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 });
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.setBool('soundOn', soundOn);
+                await prefs.setDouble('sfxVolume', sfxVolume);
               },
             ),
+            if (soundOn)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Text(
+                      'SFX Volume',
+                      style: GoogleFonts.cinzel(color: Colors.white),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      const Icon(Icons.volume_mute, color: Colors.white),
+                      Expanded(
+                        child: Slider(
+                          value: sfxVolume,
+                          min: 0,
+                          max: 1,
+                          divisions: 10,
+                          activeColor: Colors.deepPurpleAccent,
+                          onChanged: (val) async {
+                            setState(() {
+                              sfxVolume = val;
+                            });
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.setDouble('sfxVolume', sfxVolume);
+                          },
+                        ),
+                      ),
+                      const Icon(Icons.volume_up, color: Colors.white),
+                    ],
+                  ),
+                ],
+              ),
+
           ],
         ),
       ),

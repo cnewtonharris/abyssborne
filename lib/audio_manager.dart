@@ -6,6 +6,22 @@ class AudioManager {
   factory AudioManager() => _instance;
 
   final AudioPlayer _player = AudioPlayer();
+  final AudioPlayer _sfxPlayer = AudioPlayer(); // separate from music player
+
+  Future<void> playSfx(String file) async {
+    final prefs = await SharedPreferences.getInstance();
+    bool isSoundOn = prefs.getBool('soundOn') ?? true;
+    double volume = prefs.getDouble('sfxVolume') ?? 1.0;
+
+    if (!isSoundOn) return;
+
+    await _sfxPlayer.play(
+      AssetSource('audio/$file'),
+      volume: volume,
+    );
+  }
+
+
 
   AudioManager._internal();
 
