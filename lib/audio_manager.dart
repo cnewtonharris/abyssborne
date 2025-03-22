@@ -18,11 +18,19 @@ class AudioManager {
   }
 
   Future<void> playMusic() async {
+    final prefs = await SharedPreferences.getInstance();
+    double volume = prefs.getDouble('musicVolume') ?? 0.5;
     await _player.setReleaseMode(ReleaseMode.loop);
+    await _player.setVolume(volume);
     await _player.play(AssetSource('audio/main_theme.mp3'));
   }
 
   Future<void> stopMusic() async {
     await _player.stop();
   }
+
+  Future<void> setVolume(double volume) async {
+    await _player.setVolume(volume);
+  }
+
 }

@@ -213,6 +213,8 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool musicOn = true;
   bool soundOn = true;
+  double musicVolume = 0.5; // 50% by default
+
 
   @override
   void initState() {
@@ -225,6 +227,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() {
       musicOn = prefs.getBool('musicOn') ?? true;
       soundOn = prefs.getBool('soundOn') ?? true;
+      musicVolume = prefs.getDouble('musicVolume') ?? 0.5;
+
     });
   }
   Widget build(BuildContext context) {
@@ -266,6 +270,42 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               },
             ),
+            if (musicOn)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Text(
+                      'Volume',
+                      style: GoogleFonts.cinzel(color: Colors.white),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      const Icon(Icons.volume_mute, color: Colors.white),
+                      Expanded(
+                        child: Slider(
+                          value: musicVolume,
+                          min: 0,
+                          max: 1,
+                          divisions: 10,
+                          activeColor: Colors.deepPurpleAccent,
+                          onChanged: (val) async {
+                            setState(() {
+                              musicVolume = val;
+                            });
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.setDouble('musicVolume', musicVolume);
+                            await AudioManager().setVolume(musicVolume);
+                          },
+                        ),
+                      ),
+                      const Icon(Icons.volume_up, color: Colors.white),
+                    ],
+                  ),
+                ],
+              ),
             SwitchListTile(
               title: Text(
                 'Sound FX',
