@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'audio_manager.dart';
+import 'character_creation_screen.dart';
 
 
 class MainMenu extends StatefulWidget {
@@ -89,7 +90,7 @@ class _MainMenuState extends State<MainMenu>
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const GameScreen()),
+                              builder: (context) => const CharacterCreationScreen()),
                         );
                       }),
                   MenuButton(label: 'Continue', onTap: () {}),
@@ -188,7 +189,9 @@ class MenuButton extends StatelessWidget {
 
 
 class GameScreen extends StatelessWidget {
-  const GameScreen({super.key});
+  final String playerClass;
+
+  const GameScreen({required this.playerClass, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +199,7 @@ class GameScreen extends StatelessWidget {
       backgroundColor: Colors.black,
       body: Center(
         child: Text(
-          'Welcome to the Abyss...',
+          'Welcome, brave $playerClass!',
           style: GoogleFonts.cinzel(
             fontSize: 24,
             color: Colors.deepPurpleAccent,
@@ -206,6 +209,7 @@ class GameScreen extends StatelessWidget {
     );
   }
 }
+
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
