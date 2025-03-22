@@ -17,16 +17,21 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
     {
       'name': 'Knight',
       'description': 'A strong warrior with high defense.',
+      'iconPath': 'assets/images/classes/knight_icon.png',
     },
     {
       'name': 'Mage',
       'description': 'A master of arcane spells and ranged attacks.',
+      'iconPath': 'assets/images/classes/mage_icon.png',
     },
     {
       'name': 'Rogue',
       'description': 'A stealthy assassin with swift strikes.',
+      'iconPath': 'assets/images/classes/rogue_icon.png',
     },
   ];
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -63,24 +68,38 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                       width: 2,
                     ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
                     children: [
-                      Text(
-                        cls['name']!,
-                        style: GoogleFonts.cinzel(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Image.asset(
+                        cls['iconPath']!,
+                        width: 32,
+                        height: 32,
+                        fit: BoxFit.contain,
                       ),
-                      const SizedBox(height: 6),
-                      Text(
-                        cls['description']!,
-                        style: GoogleFonts.cinzel(color: Colors.white70, fontSize: 14),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              cls['name']!,
+                              style: GoogleFonts.cinzel(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              cls['description']!,
+                              style: GoogleFonts.cinzel(color: Colors.white70, fontSize: 14),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
+
                 ),
               );
             }).toList(),

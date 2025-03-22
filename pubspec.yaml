@@ -58,6 +58,9 @@ flutter:
     - assets/images/main_menu_bg.png
     - assets/audio/main_theme.mp3
     - assets/audio/tap.mp3
+    - assets/images/classes/knight_icon.png
+    - assets/images/classes/mage_icon.png
+    - assets/images/classes/rogue_icon.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
