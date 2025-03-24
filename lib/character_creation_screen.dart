@@ -12,6 +12,8 @@ class CharacterCreationScreen extends StatefulWidget {
 
 class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
   String selectedClass = 'Knight';
+  final TextEditingController nameController = TextEditingController();
+
 
   final List<Map<String, dynamic>> classes = [
     {
@@ -131,6 +133,35 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
               children: [
                 const SizedBox(height: 20),
                 Text(
+                  'Enter Your Name',
+                  style: GoogleFonts.cinzel(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: nameController,
+                  style: const TextStyle(color: Colors.white),
+                  cursorColor: Colors.deepPurpleAccent,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey.shade900,
+                    hintText: 'Your character name...',
+                    hintStyle: const TextStyle(color: Colors.white38),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Colors.deepPurpleAccent),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Colors.deepPurpleAccent),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
                   'Stats',
                   style: GoogleFonts.cinzel(
                     fontSize: 18,
@@ -218,14 +249,25 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
             const Spacer(),
             ElevatedButton(
               onPressed: () {
-                // Later: Pass this to game screen
+                final playerName = nameController.text.trim();
+                if (playerName.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please enter a name!')),
+                  );
+                  return;
+                }
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => GameScreen(playerClass: selectedClass),
+                    builder: (_) => GameScreen(
+                      playerClass: selectedClass,
+                      playerName: playerName,
+                    ),
                   ),
                 );
               },
+
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepPurpleAccent,
               ),
