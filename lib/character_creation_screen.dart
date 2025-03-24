@@ -13,30 +13,54 @@ class CharacterCreationScreen extends StatefulWidget {
 class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
   String selectedClass = 'Knight';
 
-  final List<Map<String, String>> classes = [
+  final List<Map<String, dynamic>> classes = [
     {
       'name': 'Knight',
       'description': 'A strong warrior with high defense.',
       'iconPath': 'assets/images/classes/knight_icon.png',
+      'stats': {
+        'Health': 120,
+        'Mana': 30,
+        'Attack': 60,
+        'Speed': 40,
+      },
     },
     {
       'name': 'Mage',
       'description': 'A master of arcane spells and ranged attacks.',
       'iconPath': 'assets/images/classes/mage_icon.png',
+      'stats': {
+        'Health': 70,
+        'Mana': 120,
+        'Attack': 90,
+        'Speed': 50,
+      },
     },
     {
       'name': 'Rogue',
       'description': 'A stealthy assassin with swift strikes.',
       'iconPath': 'assets/images/classes/rogue_icon.png',
+      'stats': {
+        'Health': 80,
+        'Mana': 40,
+        'Attack': 75,
+        'Speed': 90,
+      },
     },
   ];
 
 
 
+
   @override
   Widget build(BuildContext context) {
+    final selectedClassData = classes.firstWhere((cls) => cls['name'] == selectedClass);
+    final stats = selectedClassData['stats'] as Map<String, int>;
+    const int maxStatValue = 150; // Adjust as needed based on your classes
+
+
     return Scaffold(
-      backgroundColor: Colors.black,
+    backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text('Choose Your Class', style: GoogleFonts.cinzel(color: Colors.white)),
@@ -99,10 +123,98 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                       ),
                     ],
                   ),
-
                 ),
               );
             }).toList(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                Text(
+                  'Stats',
+                  style: GoogleFonts.cinzel(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ...stats.entries.map((entry) {
+                  final label = entry.key;
+                  final value = entry.value;
+                  final double percent = value / maxStatValue;
+
+                  // Assign color based on stat name
+                  Color getBarColor(String stat) {
+                    switch (stat) {
+                      case 'Health':
+                        return Colors.redAccent;
+                      case 'Mana':
+                        return Colors.blueAccent;
+                      case 'Attack':
+                        return Colors.orangeAccent;
+                      case 'Speed':
+                        return Colors.greenAccent;
+                      default:
+                        return Colors.grey;
+                    }
+                  }
+
+                  IconData getStatIcon(String stat) {
+                    switch (stat) {
+                      case 'Health':
+                        return Icons.favorite;
+                      case 'Mana':
+                        return Icons.auto_fix_high;
+                      case 'Attack':
+                        return Icons.gavel; // like a weapon hit
+                      case 'Speed':
+                        return Icons.directions_run;
+                      default:
+                        return Icons.brightness_low;
+                    }
+                  }
+
+                  final barColor = getBarColor(label);
+
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(getStatIcon(label), color: barColor, size: 18),
+                            const SizedBox(width: 8),
+                            Text(
+                              '$label: $value',
+                              style: GoogleFonts.cinzel(color: Colors.white70),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: TweenAnimationBuilder<double>(
+                            tween: Tween<double>(begin: 0, end: percent),
+                            duration: const Duration(milliseconds: 400),
+                            builder: (context, animatedValue, child) {
+                              return LinearProgressIndicator(
+                                value: animatedValue,
+                                minHeight: 10,
+                                backgroundColor: Colors.grey.shade800,
+                                valueColor: AlwaysStoppedAnimation<Color>(barColor),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ],
+            ),
+
             const Spacer(),
             ElevatedButton(
               onPressed: () {
