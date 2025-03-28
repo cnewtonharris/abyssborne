@@ -192,8 +192,7 @@ class GameScreen extends StatefulWidget {
   final String playerClass;
   final String playerName;
 
-
-
+  // Constructor to receive player class and name
   const GameScreen({
     required this.playerClass,
     required this.playerName,
