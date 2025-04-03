@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'encounter_screen.dart';
+
 class AreaSelectionScreen extends StatelessWidget {
   final List<Map<String, String>> areas = [
     {
@@ -57,12 +59,15 @@ class AreaSelectionScreen extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pop(context);
-                        // Later: Navigate to event/exploration screen
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Entering ${area['name']}...'),
-                        ));
+                        Navigator.pop(context); // close the dialog
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => EncounterScreen(areaName: area['name']!),
+                          ),
+                        );
                       },
+
                       child: const Text('Enter', style: TextStyle(color: Colors.deepPurpleAccent)),
                     ),
                   ],
