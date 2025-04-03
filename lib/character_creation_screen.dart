@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'game_screen.dart';
+
 
 import 'main_menu.dart';
 
@@ -262,10 +264,11 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                   MaterialPageRoute(
                     builder: (_) => GameScreen(
                       playerClass: selectedClass,
-                      playerName: playerName,
+                      playerName: nameController.text.trim(),
                     ),
                   ),
                 );
+
               },
 
               style: ElevatedButton.styleFrom(
