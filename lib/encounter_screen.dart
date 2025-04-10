@@ -68,19 +68,41 @@ class EncounterScreen extends StatelessWidget {
               _buildActionButton(
                 context,
                 label: 'Fight!',
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => CombatScreen(
-                        playerName: 'TestHero',
-                        playerHealth: 100,
-                        playerMana: 50,
+                  onTap: () async {
+                    Navigator.pop(context); // Close the event dialog
+
+                    // Delay just long enough for pop to finish
+                    await Future.delayed(const Duration(milliseconds: 100));
+
+                    final result = await Navigator.push<String>(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => CombatScreen(
+                          playerName: 'TestHero',
+                          playerHealth: 100,
+                          playerMana: 50,
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+
+                    // Delay again before showing SnackBar using outer context
+                    await Future.delayed(const Duration(milliseconds: 100));
+
+                    if (context.mounted) {
+                      final messenger = ScaffoldMessenger.of(context);
+                      if (result == 'victory') {
+                        messenger.showSnackBar(
+                          const SnackBar(content: Text('You won the battle!')),
+                        );
+                      } else if (result == 'defeat') {
+                        messenger.showSnackBar(
+                          const SnackBar(content: Text('You were defeated...')),
+                        );
+                      }
+                    }
+                  }
+
+
               )
             else if (event['type'] == 'loot')
               _buildActionButton(

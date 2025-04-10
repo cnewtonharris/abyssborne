@@ -49,8 +49,12 @@ class _CombatScreenState extends State<CombatScreen> {
 
     if (enemyHealth <= 0) {
       _log("$enemyName has been defeated!");
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.pop(context, 'victory');
+      });
       return;
     }
+
 
     _enemyTurn();
   }
@@ -76,7 +80,11 @@ class _CombatScreenState extends State<CombatScreen> {
 
       if (playerHealth <= 0) {
         _log("${widget.playerName} has fallen in battle...");
+        Future.delayed(const Duration(seconds: 2), () {
+          Navigator.pop(context, 'defeat');
+        });
       }
+
 
       setState(() {});
     });
