@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'area_selection_screen.dart';
 
-class GameScreen extends StatefulWidget {
+class GameScreen extends StatelessWidget {
   final String playerClass;
   final String playerName;
 
@@ -13,60 +12,18 @@ class GameScreen extends StatefulWidget {
     super.key,
   });
 
-  @override
-  State<GameScreen> createState() => _GameScreenState();
-}
-
-class _GameScreenState extends State<GameScreen> {
-  int currentHealth = 0;
-  int currentMana = 0;
-
-  int maxHealth = 0;
-  int maxMana = 0;
-
-  Map<String, Map<String, int>> classStats = {
+  final Map<String, Map<String, int>> classStats = const {
     'Knight': {'health': 120, 'mana': 30},
     'Mage': {'health': 70, 'mana': 120},
     'Rogue': {'health': 80, 'mana': 40},
   };
 
   @override
-  void initState() {
-    super.initState();
-
-    final stats = classStats[widget.playerClass]!;
-    maxHealth = stats['health']!;
-    maxMana = stats['mana']!;
-    currentHealth = maxHealth;
-    currentMana = maxMana;
-  }
-
-  void takeDamage(int amount) {
-    setState(() {
-      currentHealth = (currentHealth - amount).clamp(0, maxHealth);
-    });
-  }
-
-  void heal(int amount) {
-    setState(() {
-      currentHealth = (currentHealth + amount).clamp(0, maxHealth);
-    });
-  }
-
-  void useMana(int amount) {
-    setState(() {
-      currentMana = (currentMana - amount).clamp(0, maxMana);
-    });
-  }
-
-  void restoreMana(int amount) {
-    setState(() {
-      currentMana = (currentMana + amount).clamp(0, maxMana);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final stats = classStats[playerClass]!;
+    final int maxHealth = stats['health']!;
+    final int maxMana = stats['mana']!;
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Padding(
@@ -81,7 +38,7 @@ class _GameScreenState extends State<GameScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.playerName,
+                      playerName,
                       style: GoogleFonts.cinzel(
                         color: Colors.white,
                         fontSize: 20,
@@ -89,7 +46,7 @@ class _GameScreenState extends State<GameScreen> {
                       ),
                     ),
                     Text(
-                      widget.playerClass,
+                      playerClass,
                       style: GoogleFonts.cinzel(
                         color: Colors.white54,
                         fontSize: 14,
@@ -102,24 +59,11 @@ class _GameScreenState extends State<GameScreen> {
             const SizedBox(height: 20),
 
             // Health and Mana Bars
-            _buildStatBar(label: 'Health', value: currentHealth, max: maxHealth, color: Colors.redAccent),
+            _buildStatBar(label: 'Health', value: maxHealth, max: maxHealth, color: Colors.redAccent),
             const SizedBox(height: 10),
-            _buildStatBar(label: 'Mana', value: currentMana, max: maxMana, color: Colors.blueAccent),
+            _buildStatBar(label: 'Mana', value: maxMana, max: maxMana, color: Colors.blueAccent),
 
             const Spacer(),
-
-            // Action Buttons
-            Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: [
-                ElevatedButton(onPressed: () => takeDamage(10), child: const Text('Take Damage')),
-                ElevatedButton(onPressed: () => heal(10), child: const Text('Heal')),
-                ElevatedButton(onPressed: () => useMana(10), child: const Text('Use Mana')),
-                ElevatedButton(onPressed: () => restoreMana(10), child: const Text('Restore Mana')),
-              ],
-            ),
-            const SizedBox(height: 20),
 
             // Explore Areas
             ElevatedButton(
