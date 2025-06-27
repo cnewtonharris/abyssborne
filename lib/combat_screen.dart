@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:abyssborne/enemy_data.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -6,11 +7,23 @@ class CombatScreen extends StatefulWidget {
   final String playerName;
   final int playerHealth;
   final int playerMana;
+  final int playerAttack;
+  final int playerDefense;
+  final int playerExp;
+  final int playerLevel;
+  final int playerGold;
+  final EnemyData enemyData;
 
   const CombatScreen({
+    required this.enemyData,
     required this.playerName,
     required this.playerHealth,
     required this.playerMana,
+    required this.playerAttack,
+    required this.playerDefense,
+    required this.playerExp,
+    required this.playerLevel,
+    required this.playerGold,
     super.key,
   });
 
@@ -21,8 +34,10 @@ class CombatScreen extends StatefulWidget {
 class _CombatScreenState extends State<CombatScreen> {
   late int playerHealth;
   late int playerMana;
-  int enemyHealth = 60;
-  String enemyName = "Goblin";
+  late int playerLevel;
+  EnemyData enemyData = randomEnemy;
+  late int enemyHealth;
+  late String enemyName;
 
   List<String> combatLog = [];
   final Random rng = Random();
@@ -32,6 +47,9 @@ class _CombatScreenState extends State<CombatScreen> {
     super.initState();
     playerHealth = widget.playerHealth;
     playerMana = widget.playerMana;
+    playerLevel = widget.playerLevel;
+    enemyName = enemyData.name;
+    enemyHealth = enemyData.health;
   }
 
   void _log(String message) {
@@ -107,8 +125,8 @@ class _CombatScreenState extends State<CombatScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildStatBox(widget.playerName, playerHealth),
-                _buildStatBox(enemyName, enemyHealth),
+                _buildStatBox(widget.playerName, playerHealth, widget.playerHealth),
+                _buildStatBox(enemyName, enemyHealth, enemyData.health),
               ],
             ),
             const SizedBox(height: 20),
@@ -153,7 +171,7 @@ class _CombatScreenState extends State<CombatScreen> {
     );
   }
 
-  Widget _buildStatBox(String label, int hp) {
+  Widget _buildStatBox(String label, int currentHp, int maxHp) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -169,7 +187,7 @@ class _CombatScreenState extends State<CombatScreen> {
           ),
           child: FractionallySizedBox(
             alignment: Alignment.centerLeft,
-            widthFactor: hp.clamp(0, 100) / 100,
+            widthFactor: (currentHp / maxHp).clamp(0.0, 1.0),
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.redAccent,
@@ -179,7 +197,7 @@ class _CombatScreenState extends State<CombatScreen> {
           ),
         ),
         const SizedBox(height: 4),
-        Text('HP: $hp', style: GoogleFonts.cinzel(color: Colors.white70, fontSize: 12)),
+        Text('HP: $currentHp', style: GoogleFonts.cinzel(color: Colors.white70, fontSize: 12)),
       ],
     );
   }

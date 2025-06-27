@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'combat_screen.dart';
+import 'enemy_data.dart';
 
 class EncounterScreen extends StatelessWidget {
   final String areaName;
@@ -81,6 +82,12 @@ class EncounterScreen extends StatelessWidget {
                           playerName: 'TestHero',
                           playerHealth: 100,
                           playerMana: 50,
+                          playerAttack: 0,
+                          playerDefense: 0,
+                          playerLevel: 0,
+                          playerExp: 0,
+                          playerGold: 0,
+                          enemyData: randomEnemy,
                         ),
                       ),
                     );

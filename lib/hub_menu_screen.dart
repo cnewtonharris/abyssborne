@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'area_selection_screen.dart';
-import 'encounter_screen.dart'; // You already have this
+import 'combat_screen.dart';
+import 'enemy_data.dart';
 
 class HubMenuScreen extends StatelessWidget {
   final List<_MenuOption> options = [
     _MenuOption('Explore', Icons.map, AreaSelectionScreen()),
-    _MenuOption('Fight', Icons.gavel, EncounterScreen(areaName: '_generateRandomEvent',)),
+    _MenuOption('Fight', Icons.gavel, CombatScreen(playerName: '', playerHealth: 0, playerMana: 0, playerAttack: 0, playerDefense: 0, playerExp: 0, playerLevel: 0, playerGold: 0, enemyData: randomEnemy,)),
     _MenuOption('Shop', Icons.store, null),
     _MenuOption('Upgrade', Icons.upgrade, null),
     _MenuOption('Inventory', Icons.inventory, null),
@@ -34,15 +35,21 @@ class HubMenuScreen extends StatelessWidget {
                 elevation: 6,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 color: Colors.grey.shade900,
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(option.icon, size: 40, color: Colors.white),
-                      SizedBox(height: 10),
-                      Text(option.title,
-                          style: TextStyle(color: Colors.white, fontSize: 18)),
-                    ],
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.deepPurpleAccent, width: 2),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(option.icon, size: 40, color: Colors.white),
+                        SizedBox(height: 10),
+                        Text(option.title,
+                            style: TextStyle(color: Colors.white, fontSize: 18)),
+                      ],
+                    ),
                   ),
                 ),
               ),
