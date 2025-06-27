@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'game_screen.dart';
 
 
+import 'hub_menu_screen.dart';
 import 'main_menu.dart';
 
 class CharacterCreationScreen extends StatefulWidget {
@@ -70,7 +71,10 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
         title: Text('Choose Your Class', style: GoogleFonts.cinzel(color: Colors.white)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => HubMenuScreen()),
+          ),
         ),
       ),
       body: Padding(
@@ -262,9 +266,7 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => GameScreen(
-                      playerClass: selectedClass,
-                      playerName: nameController.text.trim(),
+                    builder: (_) => HubMenuScreen(
                     ),
                   ),
                 );
