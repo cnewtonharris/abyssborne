@@ -5,25 +5,25 @@ import 'package:google_fonts/google_fonts.dart';
 
 class CombatScreen extends StatefulWidget {
   final String playerName;
-  final int playerHealth;
-  final int playerMana;
-  final int playerAttack;
-  final int playerDefense;
-  final int playerExp;
-  final int playerLevel;
-  final int playerGold;
+  final int health;
+  final int mana;
+  final int attack;
+  final int defense;
+  final int xp;
+  final int level;
+  final int gold;
   final EnemyData enemyData;
 
   const CombatScreen({
     required this.enemyData,
     required this.playerName,
-    required this.playerHealth,
-    required this.playerMana,
-    required this.playerAttack,
-    required this.playerDefense,
-    required this.playerExp,
-    required this.playerLevel,
-    required this.playerGold,
+    required this.health,
+    required this.mana,
+    required this.attack,
+    required this.defense,
+    required this.xp,
+    required this.level,
+    required this.gold,
     super.key,
   });
 
@@ -45,9 +45,9 @@ class _CombatScreenState extends State<CombatScreen> {
   @override
   void initState() {
     super.initState();
-    playerHealth = widget.playerHealth;
-    playerMana = widget.playerMana;
-    playerLevel = widget.playerLevel;
+    playerHealth = widget.health;
+    playerMana = widget.mana;
+    playerLevel = widget.level;
     enemyName = enemyData.name;
     enemyHealth = enemyData.health;
   }
@@ -66,6 +66,7 @@ class _CombatScreenState extends State<CombatScreen> {
     _log("${widget.playerName} hits $enemyName for $damage damage.");
 
     if (enemyHealth <= 0) {
+      enemyHealth = 0;
       _log("$enemyName has been defeated!");
       Future.delayed(const Duration(seconds: 2), () {
         Navigator.pop(context, 'victory');
@@ -97,6 +98,7 @@ class _CombatScreenState extends State<CombatScreen> {
       _log("$enemyName strikes you for $damage damage.");
 
       if (playerHealth <= 0) {
+        playerHealth = 0;
         _log("${widget.playerName} has fallen in battle...");
         Future.delayed(const Duration(seconds: 2), () {
           Navigator.pop(context, 'defeat');
@@ -125,8 +127,8 @@ class _CombatScreenState extends State<CombatScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildStatBox(widget.playerName, playerHealth, widget.playerHealth),
-                _buildStatBox(enemyName, enemyHealth, enemyData.health),
+                _buildStatBox(widget.playerName, playerHealth, widget.health, playerMana, widget.mana),
+                _buildStatBox(enemyName, enemyHealth, enemyData.health, 0, 0),
               ],
             ),
             const SizedBox(height: 20),
@@ -171,7 +173,7 @@ class _CombatScreenState extends State<CombatScreen> {
     );
   }
 
-  Widget _buildStatBox(String label, int currentHp, int maxHp) {
+  Widget _buildStatBox(String label, int currentHp, int maxHp, int currentMana, int maxMana) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -198,6 +200,28 @@ class _CombatScreenState extends State<CombatScreen> {
         ),
         const SizedBox(height: 4),
         Text('HP: $currentHp', style: GoogleFonts.cinzel(color: Colors.white70, fontSize: 12)),
+        Container(
+          width: 120,
+          height: 10,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.white70),
+            borderRadius: BorderRadius.circular(6),
+            color: Colors.grey.shade800,
+          ),
+          child: FractionallySizedBox(
+            alignment: Alignment.centerLeft,
+            widthFactor: (currentMana / maxMana).clamp(0.0, 1.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.blueAccent,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text('Mana: $currentMana', style: GoogleFonts.cinzel(color: Colors.white70, fontSize: 12)),
+
       ],
     );
   }

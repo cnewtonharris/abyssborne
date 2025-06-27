@@ -2,19 +2,45 @@ import 'package:flutter/material.dart';
 import 'area_selection_screen.dart';
 import 'combat_screen.dart';
 import 'enemy_data.dart';
+import 'character_data.dart';
 
 class HubMenuScreen extends StatelessWidget {
-  final List<_MenuOption> options = [
-    _MenuOption('Explore', Icons.map, AreaSelectionScreen()),
-    _MenuOption('Fight', Icons.gavel, CombatScreen(playerName: '', playerHealth: 0, playerMana: 0, playerAttack: 0, playerDefense: 0, playerExp: 0, playerLevel: 0, playerGold: 0, enemyData: randomEnemy,)),
-    _MenuOption('Shop', Icons.store, null),
-    _MenuOption('Upgrade', Icons.upgrade, null),
-    _MenuOption('Inventory', Icons.inventory, null),
-    _MenuOption('Settings', Icons.settings, null),
-  ];
+  final CharacterData characterData;
+  final List<_MenuOption> options;
+
+  HubMenuScreen({CharacterData? characterData}) 
+      : characterData = characterData ?? CharacterData(),
+        options = [];
+
+  List<_MenuOption> _buildOptions() {
+    return [
+      _MenuOption('Explore', Icons.map, AreaSelectionScreen()),
+      _MenuOption(
+        'Fight', 
+        Icons.gavel, 
+        CombatScreen(
+          playerName: this.characterData.name,
+          health: this.characterData.health,
+          mana: this.characterData.mana,
+          attack: this.characterData.attack,
+          defense: this.characterData.defense,
+          xp: this.characterData.xp,
+          level: this.characterData.level,
+          gold: this.characterData.gold,
+          enemyData: randomEnemy,
+        ),
+      ),
+      _MenuOption('Shop', Icons.store, null),
+      _MenuOption('Upgrade', Icons.upgrade, null),
+      _MenuOption('Inventory', Icons.inventory, null),
+      _MenuOption('Settings', Icons.settings, null),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
+    final menuOptions = _buildOptions();
+    
     return Scaffold(
       appBar: AppBar(title: Text('Abyssborne: Hub')),
       body: Padding(
@@ -23,7 +49,7 @@ class HubMenuScreen extends StatelessWidget {
           crossAxisCount: 2,
           crossAxisSpacing: 12,
           mainAxisSpacing: 12,
-          children: options.map((option) {
+          children: menuOptions.map((option) {
             return InkWell(
               onTap: option.screen != null
                   ? () => Navigator.push(

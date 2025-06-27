@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'character_data.dart';
 import 'game_screen.dart';
 
 
@@ -27,7 +28,7 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
         'Health': 120,
         'Mana': 30,
         'Attack': 60,
-        'Speed': 40,
+        'Defense': 50,
       },
     },
     {
@@ -38,7 +39,7 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
         'Health': 70,
         'Mana': 120,
         'Attack': 90,
-        'Speed': 50,
+        'Defense': 40,
       },
     },
     {
@@ -49,7 +50,7 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
         'Health': 80,
         'Mana': 40,
         'Attack': 75,
-        'Speed': 90,
+        'Defense': 45,
       },
     },
   ];
@@ -190,7 +191,7 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                         return Colors.blueAccent;
                       case 'Attack':
                         return Colors.orangeAccent;
-                      case 'Speed':
+                      case 'Defense':
                         return Colors.greenAccent;
                       default:
                         return Colors.grey;
@@ -205,8 +206,8 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                         return Icons.auto_fix_high;
                       case 'Attack':
                         return Icons.gavel; // like a weapon hit
-                      case 'Speed':
-                        return Icons.directions_run;
+                      case 'Defense':
+                        return Icons.shield;
                       default:
                         return Icons.brightness_low;
                     }
@@ -263,11 +264,28 @@ class _CharacterCreationScreenState extends State<CharacterCreationScreen> {
                   return;
                 }
 
-                Navigator.push(
+                // Get the selected class stats
+                final selectedClassData = classes.firstWhere(
+                  (cls) => cls['name'] == selectedClass,
+                );
+                
+                // Create character data with the selected class stats
+                final characterData = CharacterData(
+                  name: playerName,
+                  classType: selectedClass,
+                  health: selectedClassData['stats']['Health'],
+                  maxHealth: selectedClassData['stats']['Health'],
+                  mana: selectedClassData['stats']['Mana'],
+                  maxMana: selectedClassData['stats']['Mana'],
+                  attack: selectedClassData['stats']['Attack'],
+                  defense: selectedClassData['stats']['Defense'],
+                );
+
+                // Navigate to hub with the created character
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => HubMenuScreen(
-                    ),
+                    builder: (_) => HubMenuScreen(characterData: characterData),
                   ),
                 );
 
