@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'area_selection_screen.dart';
 import 'combat_screen.dart';
@@ -16,18 +18,18 @@ class HubMenuScreen extends StatelessWidget {
     return [
       _MenuOption('Explore', Icons.map, AreaSelectionScreen()),
       _MenuOption(
-        'Fight', 
-        Icons.gavel, 
+        'Fight',
+        Icons.gavel,
         CombatScreen(
-          playerName: this.characterData.name,
-          health: this.characterData.health,
-          mana: this.characterData.mana,
-          attack: this.characterData.attack,
-          defense: this.characterData.defense,
-          xp: this.characterData.xp,
-          level: this.characterData.level,
-          gold: this.characterData.gold,
-          enemyData: randomEnemy,
+          playerName: characterData.name,
+          health: characterData.health,
+          mana: characterData.mana,
+          attack: characterData.attack,
+          defense: characterData.defense,
+          xp: characterData.xp,
+          level: characterData.level,
+          gold: characterData.gold,
+          enemyData: EnemyData.generate(enemyTypes[Random().nextInt(enemyTypes.length)]),
         ),
       ),
       _MenuOption('Shop', Icons.store, null),

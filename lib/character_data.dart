@@ -55,9 +55,10 @@ class CharacterData {
 
   void gainXp(int amount) {
     xp += amount;
-    if (xp >= 100) {
+    while (xp >= xpToNextLevel) {
       level += 1;
-      xp -= 100;
+      xp -= xpToNextLevel;
+      nextXpLevelIncrease();
     }
   }
 
@@ -68,46 +69,34 @@ class CharacterData {
   factory CharacterData.warrior(String name) => CharacterData(
     name: name,
     classType: 'Warrior',
-    health: 100,
-    maxHealth: 100,
-    mana: 50,
-    maxMana: 50,
-    attack: 10,
-    defense: 5,
-    xp: 0,
-    xpToNextLevel: 100,
-    level: 1,
-    gold: 0,
+    maxHealth: 150,
+    health: 150,
+    maxMana: 30,
+    mana: 30,
+    attack: 12,
+    defense: 10,
   );
 
   factory CharacterData.wizard(String name) => CharacterData(
     name: name,
     classType: 'Wizard',
-    health: 100,
-    maxHealth: 100,
-    mana: 50,
-    maxMana: 50,
-    attack: 10,
-    defense: 5,
-    xp: 0,
-    xpToNextLevel: 100,
-    level: 1,
-    gold: 0,
+    maxHealth: 90,
+    health: 90,
+    maxMana: 100,
+    mana: 100,
+    attack: 15,
+    defense: 3,
   );
 
   factory CharacterData.archer(String name) => CharacterData(
     name: name,
     classType: 'Archer',
-    health: 100,
-    maxHealth: 100,
-    mana: 50,
+    maxHealth: 110,
+    health: 110,
     maxMana: 50,
+    mana: 50,
     attack: 10,
-    defense: 5,
-    xp: 0,
-    xpToNextLevel: 100,
-    level: 1,
-    gold: 0,
+    defense: 7,
   );
 }
 
